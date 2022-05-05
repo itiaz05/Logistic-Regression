@@ -7,7 +7,7 @@ def loadData(filename):
     try:
         with open(filename) as f:   #reading file
             D = f.read()
-        D = D.translate(str.maketrans('', '', string.punctuation))  #clean input
+        D = D.translate(str.maketrans('', '', ','))  #clean input
         cleanedInputPath = "Logistic-Regression/files/cleanedInput.txt"    #path to save 
         with open(cleanedInputPath, 'w') as f:  #saving cleaned file for opening with numpy
             f.write(D)
