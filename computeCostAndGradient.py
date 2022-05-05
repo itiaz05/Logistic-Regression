@@ -1,16 +1,16 @@
-from cmath import log
-from dataclasses import replace
-import math
+from math import log
 import numpy as np
+from computeRegularizedCostAndGradient import computeRegularizedCostAndGradient
 from predictValue import predictValue
 
-
 def computeCostAndGradient(D, Y, Hypothesis):
+    lambdaValue = 1000
     m = D.shape[0]    #D.shape[0] = |rows| = number of examples
     D = np.array(D)
     Gradient = computeGradient(D, Y, Hypothesis, m)
     J = computeCost(D, Y, Hypothesis, m)
-    return [Gradient, J]
+    [regularizedCost, regularizedGradient] = computeRegularizedCostAndGradient(D, Y, Hypothesis, Gradient, J, lambdaValue)
+    return [regularizedCost, regularizedGradient]
 
 def computeGradient(Data, Y, Hypothesis, examplesNum):
     gradient = list()
@@ -31,7 +31,7 @@ def computeCost(Data, Y, Hypothesis, examplesNum):
         valuePredicted = predictValue(Data[i, :], Hypothesis)    
         valuePredicted = changeIfZero(valuePredicted)
         negativeValuePred = 1-valuePredicted
-        costs.append((-Y[i] * math.log(valuePredicted))-((1 - Y[i]) * math.log(negativeValuePred)))
+        costs.append((-Y[i] * log(valuePredicted))-((1 - Y[i]) * log(negativeValuePred)))
     finalCost = np.sum(costs)/examplesNum
     return finalCost
 
@@ -42,3 +42,5 @@ def changeIfZero(valuePredicted):
     elif valuePredicted == 1:
         return (1 - ifZero)
     return valuePredicted
+
+

@@ -4,6 +4,8 @@ import matplotlib as pl
 
 def loadData(filename):
     rows = 0
+    B = 0
+    Y = 0
     try:
         with open(filename) as f:   #reading file
             D = f.read()

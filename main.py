@@ -11,5 +11,6 @@ if __name__ == '__main__':
     helpMat = np.ones((3,3),dtype=np.float64)*97
     #helpMat = [[-71.0, -70.0, -24.0], [-5.0, -65.0, -75.0], [-91.0, -73.0, -30.0]]
     #helpMat = [15.0, 24.5, 26.0]
-    gradient, J = (computeCostAndGradient(D, Y, Hypothesis))
-
+    [J, gradient] = (computeCostAndGradient(D, Y, Hypothesis))
+    print(J)
+    print(gradient)
