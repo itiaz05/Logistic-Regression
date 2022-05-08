@@ -5,12 +5,14 @@ from predictValue import predictValue
 
 def computeCostAndGradient(D, Y, Hypothesis):
     lambdaValue = 1000
-    m = D.shape[0]    #D.shape[0] = |rows| = number of examples
     D = np.array(D)
-    Gradient = computeGradient(D, Y, Hypothesis, m)
+    m = D.shape[0]    #D.shape[0] = |rows| = number of examples
     J = computeCost(D, Y, Hypothesis, m)
-    [regularizedCost, regularizedGradient] = computeRegularizedCostAndGradient(D, Y, Hypothesis, Gradient, J, lambdaValue)
-    return [regularizedCost, regularizedGradient]
+    Gradient = computeGradient(D, Y, Hypothesis, m)
+    [costRegularFactor, gradientRegularFactor] = computeRegularizedCostAndGradient(D, Y, Hypothesis, lambdaValue)
+    regularizedGradient = np.add(Gradient, gradientRegularFactor)
+    regularizedCost = J + costRegularFactor
+    return [regularizedGradient, regularizedCost]
 
 def computeGradient(Data, Y, Hypothesis, examplesNum):
     gradient = list()
@@ -21,8 +23,9 @@ def computeGradient(Data, Y, Hypothesis, examplesNum):
         valuePredicted = changeIfZero(valuePredicted)
         errors.append(valuePredicted-Y[i])   
     for j in range(featuresNum):
-        gradient.append(np.sum(errors * Data[:,j]))
-        gradient[j] = gradient[j]/examplesNum
+        gradientCell = np.sum(errors * Data[:,j])
+        gradientCell /= examplesNum
+        gradient.append(gradientCell)
     return np.array(gradient)
 
 def computeCost(Data, Y, Hypothesis, examplesNum):

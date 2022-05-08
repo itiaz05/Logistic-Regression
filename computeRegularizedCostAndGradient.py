@@ -1,32 +1,25 @@
 import numpy as np
 
 
-def computeRegularizedCostAndGradient(D, Y, Hypothesis, gradient, cost, lambdaValue):
-    examplesNum = calculateSize(D)
-    regularizedCost = computeRegularizedCost(Hypothesis, examplesNum, lambdaValue)
-    regularizedGradient = computeRegularizedGradient(gradient, Hypothesis, examplesNum, lambdaValue)
-    regularizedCost += cost
-    return [regularizedCost, regularizedGradient]
+def computeRegularizedCostAndGradient(D, Y, Hypothesis, lambdaValue):
+    examplesNum = D.shape[0]
+    costFactor = costRegularizationFactor(Hypothesis, examplesNum, lambdaValue)
+    gradientFactor = gradientRegularizationFactor(Hypothesis, examplesNum, lambdaValue)    
+    return [costFactor, gradientFactor]
 
-def computeRegularizedCost(Hypothesis, examplesNum, lambdaValue):
+def costRegularizationFactor(Hypothesis, examplesNum, lambdaValue):
+    hypothesisSum = 0
     Hypothesis = np.array(Hypothesis)
-    Hypothesis = Hypothesis[1:,]**2 
-    hypothesisSum = np.sum(Hypothesis)
-    return  (hypothesisSum * lambdaValue) / (2 * examplesNum)
+    for i in range(1, Hypothesis.size):
+        hypothesisSum += Hypothesis[i] * Hypothesis[i]
+    return  hypothesisSum * lambdaValue / (2 * examplesNum)
 
-def computeRegularizedGradient(gradient, Hypothesis, examplesNum, lambdaValue):
-    gradientSize = calculateSize(gradient)
+def gradientRegularizationFactor(Hypothesis, examplesNum, lambdaValue):
+    regularizedGradient = list()
+    gradientSize = np.array(Hypothesis).size
     for j in range(gradientSize):
-        if not j==0:
-            gradient[j] += (lambdaValue * Hypothesis[j]) / examplesNum
-    return  gradient
-
-def calculateSize(arr):
-    try:
-        return arr.shape[0]
-    except AttributeError:
-        arr = np.array(arr)
-        return arr.shape[0]
-    except Exception as e:
-        return False
-
+        if j==0:
+            regularizedGradient.append(0)
+        else:
+            regularizedGradient.append((lambdaValue * Hypothesis[j]) / examplesNum)
+    return np.array(regularizedGradient)

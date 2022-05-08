@@ -26,9 +26,8 @@ def sigmoid(z):
 
 def g(z):
     try:
-        answer = 1 / (1+ math.exp(-z))
+        return 1 / (1+ math.exp(-z))
     except Exception as e:
-        answer = 0  #math error / number too big/small to represent
-    finally:
-        return answer
+        return 0  #math error / number too big/small to represent
+
 
